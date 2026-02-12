@@ -1,3 +1,10 @@
+/**
+ * this file is LoginPage.jsx
+ * 1.This login component uses Formik for form handling and JWT-based authentication
+ * 2.After successful login, the token and role are stored in localStorage to manage protected routes
+ * Role-based navigation ensures admin and users are redirected to different dashboards
+ */
+
 import React, { useState } from "react";
 import { Formik, Form, Field } from "formik";
 import axios from "axios";
@@ -12,6 +19,7 @@ const LoginForm = () => {
 
   const handleLogin = async (values, { setSubmitting }) => {
     try {
+      // API call to login
       const response = await axios.post(`${PORT}/api/auth/login`, values);
 
       if (response.data.token) {
@@ -21,6 +29,7 @@ const LoginForm = () => {
 
         toast.success("Login successful");
 
+        //here we are checking the role and navigating accordingly authenticated user
         if (response.data.role.toLowerCase() === "admin") {
           navigate("/Admin-Panel");
         } else {

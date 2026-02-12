@@ -1,3 +1,8 @@
+/**
+ * This component verifies user email using an OTP before activating the account.
+ * 
+ */
+
 import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import {
@@ -14,7 +19,7 @@ import { toast } from "react-toastify";
 
 function VerifyEmailPage() {
   const navigate = useNavigate();
-  const location = useLocation();
+  const location = useLocation(); //current URL info
   const [verificationCode, setVerificationCode] = useState("");
   const  email = new URLSearchParams(location.search).get("email");
   
@@ -26,11 +31,11 @@ function VerifyEmailPage() {
       await axios.post(
         `${PORT}/api/auth/verify-email`,
         { email, verificationCode }
-      );
+      ); //email varification
       toast.success("Email verified successfully!");
       setTimeout(() => {
         navigate("/login");
-      }, 2000);
+      }, 2000); //after 2 sec redirect to login pages
     } catch (error) {
       toast.error(error,"Invalid or expired verification code");
     }

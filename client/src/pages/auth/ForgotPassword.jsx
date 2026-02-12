@@ -1,3 +1,11 @@
+/**
+ * Forget password flow
+ * 1.Email Enter ->> OTP send
+ * 2.OTP varify (with timer)
+ * 3.New password reset 
+ */
+
+
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -9,7 +17,7 @@ function ForgotPassword() {
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [step, setStep] = useState(1);
-  const [timer, setTimer] = useState(300); // 5 minutes in seconds
+  const [timer, setTimer] = useState(600); // validity  10 minutes
   const navigate = useNavigate();
 
   const PORT=import.meta.env.VITE_APP_API_URL
@@ -24,6 +32,8 @@ function ForgotPassword() {
     return () => clearInterval(interval);
   }, [step, timer]);
 
+
+  //count Down show on UI mm:ss
   const formatTime = (seconds) => {
     const minutes = Math.floor(seconds / 60);
     const remainingSeconds = seconds % 60;
@@ -48,7 +58,7 @@ function ForgotPassword() {
       if (response.ok) {
         toast.success("OTP sent successfully!");
         setStep(2);
-        setTimer(300); // Reset timer to 5 minutes
+        setTimer(600); // Reset timer to 10 minutes
       } else {
         toast.error(data.message || "Failed to send OTP");
       }

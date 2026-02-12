@@ -1,3 +1,23 @@
+/**
+ * Form data flow and handling 
+ * 1.POST /api/auth/signup
+ * 2.validate fields
+→ 3.if role === Admin:
+     verify adminSecret
+→ 4.hash password (bcrypt)
+→ 5.save user in DB (unverified)
+→ 6.generate OTP
+→ 7.send email
+
+ * 
+
+*Signup supports both users and admins with role-based validation.
+*Admin registration is secured using a secret key and OTP-based email verification
+*User accounts are activated only after successful email verification
+ */
+
+
+
 import React, { useState } from 'react';
 import axios from 'axios';
 import toast from 'react-hot-toast';
@@ -21,7 +41,6 @@ const SignupForm = () => {
     adminSecret: ''
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
-
   const PORT = import.meta.env.VITE_APP_API_URL;
 
   const handleChange = (e) => {
@@ -192,6 +211,7 @@ const SignupForm = () => {
                 disabled={isSubmitting}
                 className="px-10 py-4 text-lg font-semibold rounded-full bg-yellow-400 text-black hover:bg-yellow-300 transition shadow-xl disabled:opacity-60"
               >
+                
                 {isSubmitting ? "Creating Account..." : "Create Account"}
               </button>
             </div>
