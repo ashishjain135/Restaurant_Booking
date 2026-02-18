@@ -1,4 +1,6 @@
-
+/**
+ * Admin added table also add table booked reserved etc
+ */
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { io } from "socket.io-client";

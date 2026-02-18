@@ -1,3 +1,6 @@
+/**
+ * BookingForm handles table reservation by collecting user inputs, validating availability, and sending data to a protected backend endpoint
+ */
 import React, { useState, useEffect } from "react";
 
 export default function BookingForm({ user = {} }) {

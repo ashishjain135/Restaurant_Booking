@@ -1,3 +1,7 @@
+/**
+ * Admin can manage registered user delete and edit
+ */
+
 const RegisteredUser = require('../models/RegisteredUserModel');
 
 // Get all registered users

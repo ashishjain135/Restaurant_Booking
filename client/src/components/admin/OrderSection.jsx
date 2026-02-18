@@ -1,4 +1,6 @@
-
+/**
+ * Manage all Orders by date and history
+ */
 // export default OrdersSection;
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
@@ -87,14 +89,14 @@ const OrdersSection = () => {
   };
 
   return (
-    <div className="p-6 bg-gradient-to-br from-blue-100 to-purple-100 min-h-screen">
-      <h2 className="text-4xl font-extrabold text-purple-700 mb-6">Orders Panel</h2>
+    <div className="p-6 bg-gray-100 min-h-screen">
+      <h2 className="text-4xl font-extrabold text-gray-800 mb-6">Orders Panel</h2>
 
       <div className="flex gap-6 mb-6 flex-wrap items-center">
-        <div className="bg-white p-4 rounded shadow w-48 border-l-4 border-purple-500 text-purple-700 font-medium">
+        <div className="bg-white p-4 rounded shadow w-48 border-l-4 border-yellow-500 text-grey-400 font-medium">
           Total Orders: {orders.length}
         </div>
-        <div className="bg-white p-4 rounded shadow w-48 border-l-4 border-blue-500 text-blue-700 font-medium">
+        <div className="bg-white p-4 rounded shadow w-48 border-l-4 border-blue-500 text-grey-500 font-medium">
           Today's Orders: {
             orders.filter(o => new Date(o.createdAt).toLocaleDateString() === new Date().toLocaleDateString()).length
           }
@@ -107,7 +109,7 @@ const OrdersSection = () => {
         <select
           value={statusFilter}
           onChange={(e) => setStatusFilter(e.target.value)}
-          className="border border-purple-300 p-2 rounded shadow bg-white text-purple-700">
+          className="border border-purple-300 p-2 rounded shadow bg-white text-grey-400">
           <option value="all">All Statuses</option>
           <option value="Pending">Pending</option>
           <option value="Preparing">Preparing</option>

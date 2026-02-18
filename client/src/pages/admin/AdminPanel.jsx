@@ -1,3 +1,9 @@
+/**
+ * AdminPanel acts as a layout controller that dynamically renders different admin modules based on selected sections.
+ * 
+ */
+
+
 import { useState } from "react";
 import AdminSidebar from "../../components/admin/AdminSidebar";
 import AdminDashboard from "../../components/admin/AdminDashboard";
@@ -9,7 +15,7 @@ import UserTable from "../../components/admin/UserTable";
 
 const AdminPanel = () => {
   const [activeSection, setActiveSection] = useState("dashboard");
-
+  //follows a modular component-based architecture.
   const renderSection = () => {
     switch (activeSection) {
       case "dashboard":

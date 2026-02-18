@@ -1,3 +1,9 @@
+/**
+ * Order controller
+ * today revenue
+ * COD renvenue
+ */
+
 const Order = require('../models/Order'); // adjust path as needed
 
 const getRevenueData = async (req, res) => {

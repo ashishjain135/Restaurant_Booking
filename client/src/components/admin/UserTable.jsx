@@ -1,4 +1,6 @@
-
+/**
+ * Admin can manage table Booking from user 
+ */
 // export default RegisteredUserList;
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';

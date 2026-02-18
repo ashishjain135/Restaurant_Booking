@@ -1,3 +1,7 @@
+/**
+ * UserSidebar dynamically controls user panel navigation using lifted state
+ */
+
 const UserSidebar = ({ active, setActive }) => {
 
   const Item = ({ id, label }) => (

@@ -1,3 +1,8 @@
+/**
+ * This is a reusable button component built with variant-based styling for consistency and scalability
+ */
+
+
 import React from "react";
 
 export const Button = ({

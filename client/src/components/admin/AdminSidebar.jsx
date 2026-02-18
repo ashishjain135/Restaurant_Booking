@@ -1,3 +1,12 @@
+/**
+ * Admin side bar 
+ * dashboard default
+ * registerd user
+ * item 
+ * revenue
+ */
+
+
 const AdminSidebar = ({ activeSection, setActiveSection }) => {
 
   const navBtn = (key, label) => (

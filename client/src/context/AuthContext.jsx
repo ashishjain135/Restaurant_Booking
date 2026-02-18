@@ -1,3 +1,9 @@
+/**
+ * How are you managing authentication globally?
+ * Authentication state is managed globally using React Context API and persisted using localStorage.
+ * 
+ */
+
 // export default AuthProvider;
 
 import { createContext, useState, useEffect } from 'react';

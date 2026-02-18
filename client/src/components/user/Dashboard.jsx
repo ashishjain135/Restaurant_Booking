@@ -1,4 +1,7 @@
-
+/**
+ * fetch user recent booking history
+ * other features last visit etc...
+ */
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";

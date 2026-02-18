@@ -148,7 +148,7 @@ function ForgotPassword() {
       const data = await response.json();
       if (response.ok) {
         toast.success("New OTP sent successfully!");
-        setTimer(300); // Reset timer to 5 minutes
+        setTimer(600); // Reset timer to 5 minutes
       } else {
         toast.error(data.message || "Failed to resend OTP");
       }

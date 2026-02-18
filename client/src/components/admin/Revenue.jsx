@@ -1,3 +1,7 @@
+/**
+ * The Revenue component displays aggregated financial data fetched from the backend using dynamic month and year filters.
+ */
+
 import React, { useEffect, useState } from "react";
 
 const Revenue = () => {

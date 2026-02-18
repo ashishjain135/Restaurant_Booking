@@ -47,7 +47,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ================= FEATURES ================= */}
+      {/* ================= FEATURES ====================== */}
       <section className="py-16 px-6 max-w-6xl mx-auto text-center">
         <h2 className="text-3xl md:text-4xl font-bold mb-12">
           Why Book with <span className="text-yellow-400">MealAdda?</span>
@@ -122,7 +122,7 @@ export default function Home() {
           Enjoy unforgettable dining moments. Reserve your table today.
         </p>
         <Link
-          to="/booking"
+          to="/login"
           className="inline-block px-8 py-3 rounded-full bg-yellow-400 text-black font-semibold hover:bg-white transition"
         >
           Book a Table

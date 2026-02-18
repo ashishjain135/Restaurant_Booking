@@ -1,4 +1,7 @@
-
+/**
+ * MyBookings component fetches user-specific booking data, supports real-time updates using Socket.io, and allows booking cancellation
+ * 
+ */
 import React, { useState, useEffect } from "react";
 import { io } from "socket.io-client";
 

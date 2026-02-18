@@ -1,3 +1,5 @@
+require("dotenv").config();
+
 const bcrypt = require("bcrypt");
 const crypto = require('crypto');
 const User = require('../models/UserModel');
@@ -10,7 +12,8 @@ apiKey.apiKey = process.env.BREVO_API_KEY;
 const tranEmailApi = new SibApiV3Sdk.TransactionalEmailsApi();
 
 
-require("dotenv").config();
+
+
 // Store OTPs temporarily (in production, use Redis or a database)
 const otpStore = new Map();
 
@@ -72,34 +75,6 @@ exports.forgotPassword = async (req, res) => {
   }
 };
 
-// exports.verifyOTP = async (req, res) => {
-//   try {
-//     const { email, otp } = req.body;
-//     console.log(email)
-//     console.log(otp)
-    
-
-//     const storedOTPData = otpStore.get(email);
-//     console.log(storedOTPData)
-//     if (!storedOTPData) {
-//       return res.status(400).json({ message: 'No OTP found for this email' });
-//     }
-
-//     if (Date.now() > storedOTPData.expiry) {
-//       otpStore.delete(email);
-//       return res.status(400).json({ message: 'OTP has expired' });
-//     }
-
-//     if (storedOTPData.otp !== otp) {
-//       return res.status(400).json({ message: 'Invalid OTP' });
-//     }
-
-//     res.status(200).json({ message: 'OTP verified successfully' });
-//   } catch (error) {
-//     console.error('Error in verifyOTP:', error);
-//     res.status(500).json({ message: 'Error verifying OTP' });
-//   }
-// };
 
 exports.verifyOTP = async (req, res) => {
     try {
@@ -165,40 +140,47 @@ exports.resetPassword = async (req, res) => {
   }
 };
 
-
 exports.resendOTP = async (req, res) => {
   try {
     const { email } = req.body;
-    
+
+    // Check user exists
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
     // Generate new OTP
     const otp = crypto.randomInt(100000, 999999).toString();
-    
-    // Store new OTP
+
+    // Store new OTP with expiry
     otpStore.set(email, {
       otp,
-      expiry: Date.now() + 5 * 60 * 1000 // 5 minutes
+      expiry: Date.now() + 5 * 60 * 1000,
     });
 
-    // Send email
-    const mailOptions = {
-      from: process.env.EMAIL_USER,
-      to: email,
-      subject: 'New Password Reset OTP',
-      html: `
-        <h1>New Password Reset OTP</h1>
-        <p>Your new OTP for password reset is: <strong>${otp}</strong></p>
-        <p>This OTP will expire in 5 minutes.</p>
-        <p>If you didn't request this, please ignore this email.</p>
-      `
-    };
+    // Send via Brevo
+    await tranEmailApi.sendTransacEmail({
+      sender: {
+        email: process.env.SENDER_EMAIL,
+        name: "Restaurant Booking",
+      },
+      to: [{ email }],
+      subject: "New Password Reset OTP",
+      htmlContent: `
+        <h1>New OTP</h1>
+        <p>Your new OTP is:</p>
+        <h2>${otp}</h2>
+        <p>Valid for 5 minutes.</p>
+      `,
+    });
 
-    await transporter.sendMail(mailOptions);
-    
-    res.status(200).json({ message: 'New OTP sent successfully' });
+    res.status(200).json({ message: "New OTP sent successfully" });
   } catch (error) {
-    console.error('Error in resendOTP:', error);
-    res.status(500).json({ message: 'Error resending OTP' });
+    console.error("Error in resendOTP:", error);
+    res.status(500).json({ message: "Error resending OTP" });
   }
 };
+
 
 

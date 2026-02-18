@@ -1,4 +1,8 @@
-
+/**
+ * User profile 
+ * verify token from localStorage
+ * user can update data and change password or delete account
+ */
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Eye, EyeOff } from "lucide-react";
