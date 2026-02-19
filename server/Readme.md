@@ -11,7 +11,7 @@ This is a full-stack **Restaurant Booking** web application built using the **ME
 
 ## 🚀 Live Preview
 
-Frontend: [https://restaurant-booking-client.netlify.app](https://restaurant-booking-client.netlify.app)  
+Frontend: (https://restaurant-booking-eosin.vercel.app)  
 Backend: Coming Soon
 
 ---
@@ -64,7 +64,7 @@ restaurant-booking/
 ### Clone the Repository
 
 ```bash
-git clone https://github.com/sukhdeep143/restaurant-booking.git
+git clone
 cd restaurant-booking
 ````
 
@@ -74,8 +74,8 @@ cd restaurant-booking
 
 ```bash
 cd client
-yarn install
-yarn dev
+npm install
+npm run dev
 ```
 
 > Runs on: [http://localhost:5173](http://localhost:5173)
@@ -86,8 +86,8 @@ yarn dev
 
 ```bash
 cd server
-yarn install
-yarn dev
+npm install
+npm start
 ```
 
 > Runs on: [http://localhost:5000](http://localhost:5000)

@@ -19,8 +19,23 @@ const userRoutes = require('./routes/userRoutes');
 require("dotenv").config();
 
 const app = express();
-app.use(cors());
+
 app.use(express.json());
+const allowedOrigins = [
+  "http://localhost:5173",
+  "https://restaurant-booking-eosin.vercel.app"
+];
+
+app.use(cors({
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+  credentials: true
+}));
 
 const PORT = process.env.PORT || 5000;
 
@@ -52,13 +67,16 @@ const server = http.createServer(app);
 // Set up Socket.IO
 const io = new Server(server, {
   cors: {
-    origin: '*', // replace * with frontend origin if needed
-    methods: ['GET', 'POST']
+    origin: allowedOrigins,
+    methods: ["GET", "POST"],
+    credentials: true
   }
 });
 
 // Store io instance globally (optional but handy)
 global.io = io;
+
+
 
 // On client connection
 io.on('connection', (socket) => {
