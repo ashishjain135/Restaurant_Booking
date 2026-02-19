@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Eye, EyeOff } from "lucide-react";
-
+import API from "../../utils/axios";
 const ProfileSection = () => {
   const [user, setUser] = useState(null);
   const [editMode, setEditMode] = useState(false);
@@ -19,7 +19,7 @@ useEffect(() => {
     }
 
     try {
-      const res = await axios.get("http://localhost:5000/api/user", {
+      const res = await API.get("/api/user", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -43,7 +43,7 @@ const handleInputChange = (e) => {
 
   const handleProfileUpdate = async () => {
     try {
-      const res = await axios.put(`/api/user`, user, {
+      const res = await API.put(`/api/user`, user, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setUser(res.data);
@@ -56,7 +56,7 @@ const handleInputChange = (e) => {
 
   const handlePasswordChange = async () => {
     try {
-      await axios.put(`/api/user/password`, passwordData, {
+      await API.put(`/api/user/password`, passwordData, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setPasswordData({ oldPassword: "", newPassword: "" });

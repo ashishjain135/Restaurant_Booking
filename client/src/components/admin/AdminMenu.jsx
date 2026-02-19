@@ -3,7 +3,7 @@
  */
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-
+import API from "../../utils/axios"
 function AdminMenu() {
   const [menuItems, setMenuItems] = useState([]);
   const [form, setForm] = useState({
@@ -23,7 +23,7 @@ const [stats, setStats] = useState({
 // ✅ Add this function outside useEffect so it's accessible in handleSubmit & handleDelete
 const fetchStats = async () => {
   try {
-    const res = await axios.get("http://localhost:5000/api/menu/stats/dashboard");
+    const res = await API.get("/api/menu/stats/dashboard");
     setStats(res.data);
       localStorage.setItem("dashboardStats", JSON.stringify(res.data));
   } catch (err) {
@@ -48,7 +48,7 @@ useEffect(() => {
 
   const fetchMenu = async () => {
     try {
-      const res = await axios.get('http://localhost:5000/api/menu');
+      const res = await API.get('/api/menu');
       setMenuItems(res.data);
     } catch (err) {
       console.error('Error fetching menu:', err);
@@ -67,9 +67,9 @@ const handleSubmit = async (e) => {
   e.preventDefault();
   try {
     if (editId) {
-      await axios.put(`http://localhost:5000/api/menu/${editId}`, form);
+      await API.put(`/api/menu/${editId}`, form);
     } else {
-      await axios.post('http://localhost:5000/api/menu', form);
+      await API.post('/api/menu', form);
     }
 
     await fetchMenu();
@@ -95,7 +95,7 @@ const handleSubmit = async (e) => {
 
 const handleDelete = async (id) => {
   try {
-    await axios.delete(`http://localhost:5000/api/menu/${id}`);
+    await API.delete(`/api/menu/${id}`);
     await fetchMenu();
     fetchStats(); // ✅ Refresh dashboard stats after deletion
   } catch (err) {

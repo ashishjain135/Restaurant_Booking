@@ -56,12 +56,11 @@ const handleSubmit = async (e) => {
   setIsSubmitting(true);
 
   try {
-    const response = await fetch("http://localhost:5000/api/bookings", {
-      method: "POST",
+    const response = await API.post("/api/bookings", {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ ...formData, userId }),
+      data: { ...formData, userId },
 
     });
 

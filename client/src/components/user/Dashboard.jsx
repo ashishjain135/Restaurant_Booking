@@ -5,7 +5,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-
+import API from "../../utils/axios";
 export default function Dashboard({
   onBookTableClick,
   onBookingHistoryClick,
@@ -21,7 +21,7 @@ export default function Dashboard({
         const userId = localStorage.getItem("userId");
         const token = localStorage.getItem("token");
 
-        const response = await axios.get(`/api/bookings/dashboard/${userId}`, {
+        const response = await API.get(`/api/bookings/dashboard/${userId}`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },

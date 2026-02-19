@@ -6,7 +6,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Eye, EyeOff } from "lucide-react";
-
+import API from "../../utils/axios";
 const ProfileSection = () => {
   const [user, setUser] = useState(null);
   const [editMode, setEditMode] = useState(false);
@@ -24,7 +24,7 @@ useEffect(() => {
     }
 
     try {
-      const res = await axios.get("http://localhost:5000/api/user", {
+      const res = await API.get("/api/user", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -48,7 +48,7 @@ const handleInputChange = (e) => {
 
   const handleProfileUpdate = async () => {
     try {
-      const res = await axios.put(`/api/user`, user, {
+      const res = await API.put(`/api/user`, user, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setUser(res.data);
@@ -61,7 +61,7 @@ const handleInputChange = (e) => {
 
   const handlePasswordChange = async () => {
     try {
-      await axios.put(`/api/user/password`, passwordData, {
+      await API.put(`/api/user/password`, passwordData, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setPasswordData({ oldPassword: "", newPassword: "" });
@@ -75,7 +75,7 @@ const handleInputChange = (e) => {
   const handleDelete = async () => {
     if (window.confirm("Are you sure you want to delete your account?")) {
       try {
-        await axios.delete(`/api/user`, {
+        await API.delete(`/api/user`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         alert("Account deleted");
@@ -182,13 +182,6 @@ const handleInputChange = (e) => {
       )}
 
       <h3 className="mt-8 mb-2 font-semibold text-lg">🔐 Change Password</h3>
-      {/* <input
-        type="password"
-        placeholder="Current Password"
-        value={passwordData.oldPassword}
-        onChange={(e) => setPasswordData({ ...passwordData, oldPassword: e.target.value })}
-        className="w-full border border-gray-300 p-2 rounded mb-2"
-      /> */}
 
        <div className="relative mb-2">
         <input
@@ -208,16 +201,6 @@ const handleInputChange = (e) => {
           {showOldPassword ? <EyeOff size={20} /> : <Eye size={20} />}
         </span>
       </div>
-
-
-      {/* <input
-        type="password"
-        placeholder="New Password"
-        value={passwordData.newPassword}
-        onChange={(e) => setPasswordData({ ...passwordData, newPassword: e.target.value })}
-        className="w-full border border-gray-300 p-2 rounded mb-2"
-      /> */}
-
       <div className="relative mb-4">
         <input
           type={showNewPassword ? "text" : "password"}

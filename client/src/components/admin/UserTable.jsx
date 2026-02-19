@@ -4,7 +4,7 @@
 // export default RegisteredUserList;
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-
+import API from '../../utils/axios';
 const RegisteredUserList = () => {
   const [users, setUsers] = useState([]);
   const [editingUser, setEditingUser] = useState(null);
@@ -16,8 +16,9 @@ const RegisteredUserList = () => {
 
   const fetchUsers = async () => {
     try {
-      const res = await axios.get('/api/registered-users');
+      const res = await API.get('/api/registered-users');
       setUsers(res.data);
+      console.log('Fetched users:', res.data);
     } catch (error) {
       console.error('Error fetching registered users:', error);
     }
@@ -29,7 +30,7 @@ const RegisteredUserList = () => {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`/api/registered-users/${id}`);
+      await API.delete(`/api/registered-users/${id}`);
       fetchUsers();
     } catch (error) {
       console.error('Error deleting user:', error);
@@ -47,7 +48,7 @@ const RegisteredUserList = () => {
 
   const handleUpdate = async () => {
     try {
-      await axios.put(`/api/registered-users/${editingUser}`, formData);
+      await API.put(`/api/registered-users/${editingUser}`, formData);
       setEditingUser(null);
       fetchUsers();
     } catch (error) {

@@ -4,7 +4,7 @@
 // export default OrdersSection;
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-
+import API from "../../utils/axios";
 const OrdersSection = () => {
   const [orders, setOrders] = useState([]);
   const [selectedOrder, setSelectedOrder] = useState(null);
@@ -30,7 +30,7 @@ const OrdersSection = () => {
       const params = {};
       if (statusFilter !== 'all') params.status = statusFilter;
 
-      const response = await axios.get('http://localhost:5000/api/orders', { params });
+      const response = await API.get('/api/orders', { params });
       setOrders(response.data);
     } catch (error) {
       console.error('Error fetching orders:', error);
@@ -38,12 +38,12 @@ const OrdersSection = () => {
   };
 
   const updateStatus = async (id, status) => {
-    await axios.patch(`http://localhost:5000/api/orders/${id}`, { status });
+    await API.patch(`/api/orders/${id}`, { status });
     fetchOrders();
   };
 
   const deleteOrder = async (id) => {
-    await axios.delete(`http://localhost:5000/api/orders/${id}`);
+    await API.delete(`/api/orders/${id}`);
     fetchOrders();
   };
 
@@ -74,7 +74,7 @@ const OrdersSection = () => {
     try {
       const total = newOrder.items.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
-      await axios.post('http://localhost:5000/api/orders', {
+      await API.post('/api/orders', {
         ...newOrder,
         totalAmount: total,
       });

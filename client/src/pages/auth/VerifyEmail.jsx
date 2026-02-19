@@ -15,6 +15,7 @@ import {
 import axios from "axios";
 import { toast } from "react-toastify";
 // import api from "../apiUrl/api"
+  import API from "../../utils/axios";
 
 
 function VerifyEmailPage() {
@@ -23,13 +24,12 @@ function VerifyEmailPage() {
   const [verificationCode, setVerificationCode] = useState("");
   const  email = new URLSearchParams(location.search).get("email");
   
-  const PORT=import.meta.env.VITE_APP_API_URL 
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post(
-        `${PORT}/api/auth/verify-email`,
+      await API.post(
+        "/api/auth/verify-email",
         { email, verificationCode }
       ); //email varification
       toast.success("Email verified successfully!");

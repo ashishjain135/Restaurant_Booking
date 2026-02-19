@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { ChevronDown } from "lucide-react";
 import DashboardCard from "./DashboardCard";
-
+import API from "../../utils/axios";
 const AdminDashboard = ({ setActiveSection }) => {
   const [open, setOpen] = useState({
     orders: true,
@@ -28,20 +28,33 @@ const AdminDashboard = ({ setActiveSection }) => {
   }, []);
 
   const fetchMenuStats = async () => {
-    const res = await axios.get(
-      "http://localhost:5000/api/menu/stats/dashboard"
-    );
+    try{
+      const res = await API.get(
+      "/api/menu/stats/dashboard");
     setMenuStats(res.data);
+    } catch (err) {
+    console.error("Error fetching menu stats:", err);
+    }
   };
 
   const fetchOrders = async () => {
-    const res = await axios.get("http://localhost:5000/api/orders");
-    setOrders(res.data);
+    try{
+      const res = await API.get("/api/orders");
+      setOrders(res.data);
+      console.log("Fetched orders:", res.data);
+    }catch(err){
+      console.error("Error fetching orders:", err);
+    }
   };
 
   const fetchTables = async () => {
-    const res = await axios.get("http://localhost:5000/api/tables");
-    setTables(res.data);
+    try{
+      const res = await API.get("/api/tables");
+      setTables(res.data);
+      console.log("Fetched tables:", res.data);
+    }catch(err){
+      console.error("Error fetching tables:", err);
+    }
   };
 
   /* ================= DATE FILTERS ================= */

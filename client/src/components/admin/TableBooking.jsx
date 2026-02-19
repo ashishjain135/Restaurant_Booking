@@ -4,8 +4,11 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { io } from "socket.io-client";
+import API from "../../utils/axios"
 
-const socket = io("http://localhost:5000");
+const socket = io(import.meta.env.VITE_API_URL, {
+  withCredentials: true,
+});
 
 const TableBooking = () => {
   const [showAddModal, setShowAddModal] = useState(false);
@@ -23,7 +26,7 @@ const TableBooking = () => {
 
   const fetchBookings = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/api/bookings");
+      const res = await API.get("/api/bookings");
       setBookings(res.data);
     } catch (err) {
       console.error("Failed to fetch bookings", err);
@@ -32,7 +35,7 @@ const TableBooking = () => {
 
   const fetchTables = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/api/tables");
+      const res = await API.get("/api/tables");
       setTables(res.data);
     } catch (err) {
       console.error("Error fetching tables:", err);
@@ -65,7 +68,7 @@ const TableBooking = () => {
 
   const handleDelete = async (tableNumber) => {
     try {
-      await axios.delete(`http://localhost:5000/api/tables/by-number/${tableNumber}`);
+      await API.delete(`/api/tables/by-number/${tableNumber}`);
       fetchTables();
     } catch (err) {
       console.error("Error deleting table:", err);
@@ -80,7 +83,7 @@ const TableBooking = () => {
   const handleSubmitAddTable = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post("http://localhost:5000/api/tables", newTable);
+      const res = await API.post("/api/tables", newTable);
       setTables([...tables, res.data]);
       setShowAddModal(false);
       setNewTable({ tableNumber: "", capacity: "", status: "available", bookingTime: "" });
@@ -98,7 +101,7 @@ const TableBooking = () => {
         dataToSend.bookingTime = bookingTime;
       }
 
-      await axios.patch(`http://localhost:5000/api/tables/by-number/${tableNumber}`, dataToSend);
+      await API.patch(`/api/tables/by-number/${tableNumber}`, dataToSend);
       fetchTables();
       setShowEditModal(false);
       setEditingTable(null);

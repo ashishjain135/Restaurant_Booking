@@ -22,6 +22,8 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import { useNavigate, Link } from 'react-router-dom';
+import API from '../../utils/axios';
+
 
 const SignupForm = () => {
   const navigate = useNavigate();
@@ -41,7 +43,6 @@ const SignupForm = () => {
     adminSecret: ''
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const PORT = import.meta.env.VITE_APP_API_URL;
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -92,7 +93,7 @@ const SignupForm = () => {
     }
 
     try {
-      const response = await axios.post(`${PORT}/api/auth/signup`, formData, {
+      const response = await API.post("/api/auth/signup", formData, {
         headers: { 'Content-Type': 'application/json' },
       });
 
