@@ -12,7 +12,7 @@ This is a full-stack **Restaurant Booking** web application built using the **ME
 ## 🚀 Live Preview
 
 Frontend: (https://restaurant-booking-eosin.vercel.app)  
-Backend: Coming Soon
+Backend: (https://restaurant-booking-1-yn4q.onrender.com)
 
 ---
 
@@ -64,7 +64,7 @@ restaurant-booking/
 ### Clone the Repository
 
 ```bash
-git clone
+git clone https://github.com/ashishjain135/Restaurant_Booking
 cd restaurant-booking
 ````
 
