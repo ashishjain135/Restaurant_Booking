@@ -13,7 +13,7 @@ import Header from "./components/layout/Header";
 import UserProfile from "./components/user/UserProfile";
 import AdminPanel from "./pages/admin/AdminPanel";
 import UserPanel from "./pages/user/UserPanel";
-
+import BookingForm from "./components/user/BookingForm";
 const token = localStorage.getItem("token");
 // console.log(token);
 
@@ -33,6 +33,7 @@ function App() {
         <Route path="/verify-email" element={<VerifyEmailPage />} />
         <Route path="/profile" element={<UserProfile />} />
         <Route path="/admin-panel" element={<AdminPanel />} />
+        <Route path="/booking" element={<BookingForm />} />
         <Route path="/User/*" element={<UserPanel />} />
       </Routes>
       <Footer />

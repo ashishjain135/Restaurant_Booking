@@ -13,17 +13,14 @@ import { useNavigate, Link } from "react-router-dom";
 import { Lock, Mail, Eye, EyeOff, ArrowRight } from "lucide-react";
 import API from "../../utils/axios";
 
-
-
 const LoginForm = () => {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
-  const PORT = import.meta.env.VITE_APP_API_URL;
 
   const handleLogin = async (values, { setSubmitting }) => {
     try {
       // API call to login
-      const response = await API.post(`${PORT}/api/auth/login`, values);
+      const response = await API.post("/api/auth/login", values);
 
       if (response.data.token) {
         localStorage.setItem("userId", response.data.userId);

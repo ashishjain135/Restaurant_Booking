@@ -11,7 +11,13 @@ const UserPanel = () => {
   const renderContent = () => {
     switch (active) {
       case "dashboard":
-        return <Dashboard />;
+        return (
+          <Dashboard
+            onBookTableClick={() => setActive("book")}
+            onBookingHistoryClick={() => setActive("history")}
+            onProfileClick={() => setActive("profile")}
+          />
+        );
       case "book":
         return <BookingForm />;
       case "history":
@@ -27,9 +33,7 @@ const UserPanel = () => {
     <div className="flex bg-gray-100 min-h-screen">
       <UserSidebar active={active} setActive={setActive} />
 
-      <main className="flex-1 p-8">
-        {renderContent()}
-      </main>
+      <main className="flex-1 p-8">{renderContent()}</main>
     </div>
   );
 };

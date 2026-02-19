@@ -10,6 +10,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { Mail, Lock, KeyRound, ArrowLeft } from "lucide-react";
+import API from "../../utils/axios";
 
 function ForgotPassword() {
   const [email, setEmail] = useState("");
@@ -20,7 +21,6 @@ function ForgotPassword() {
   const [timer, setTimer] = useState(600); // validity  10 minutes
   const navigate = useNavigate();
 
-  const PORT=import.meta.env.VITE_APP_API_URL
 
   useEffect(() => {
     let interval;
@@ -40,122 +40,101 @@ function ForgotPassword() {
     return `${minutes}:${remainingSeconds.toString().padStart(2, "0")}`;
   };
 
-  const handleSendOTP = async (e) => {
-    e.preventDefault();
-    try {
-      const response = await fetch(
-        `${PORT}/api/auth/forgot-password`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ email }),
-        }
-      );
+const handleSendOTP = async (e) => {
+  e.preventDefault();
+  try {
+    await API.post("/api/auth/forgot-password", {
+      email,
+    });
+    toast.success("OTP sent to your email!");
+    setStep(2);
+    setTimer(600); // Reset timer to 10 minutes (600 sec)
+  } catch (error) {
+    toast.error(
+      error.response?.data?.message || "Failed to send OTP"
+    );
+    console.error(error);
+  }
+};
 
-      const data = await response.json();
-      if (response.ok) {
-        toast.success("OTP sent successfully!");
-        setStep(2);
-        setTimer(600); // Reset timer to 10 minutes
-      } else {
-        toast.error(data.message || "Failed to send OTP");
-      }
-    } catch (error) {
-      toast.error(error,"An error occurred. Please try again.");
-    }
-  };
 
-  const handleVerifyOTP = async (e) => {
-    e.preventDefault();
-    if (timer === 0) {
-      toast.error("OTP has expired. Please request a new one.");
-      return;
-    }
-    try {
-      const response = await fetch(
-        `${PORT}/api/auth/verify-otp`,
-        // "http://localhost:4000/v1/auth/verify-otp",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ email, otp }),
-        }
-      );
+const handleVerifyOTP = async (e) => {
+  e.preventDefault();
 
-      const data = await response.json();
-      if (response.ok) {
-        toast.success("OTP verified successfully!");
-        setStep(3);
-      } else {
-        toast.error(data.message || "Invalid OTP");
-      }
-    } catch (error) {
-      toast.error(error,"An error occurred. Please try again.");
-    }
-  };
+  if (timer === 0) {
+    toast.error("OTP has expired. Please request a new one.");
+    return;
+  }
 
-  const handleResetPassword = async (e) => {
-    e.preventDefault();
-    if (newPassword !== confirmPassword) {
-      toast.error("Passwords do not match!");
-      return;
-    }
-    try {
-      const response = await fetch(
-        `${PORT}/api/auth/reset-password`,
-        // "http://localhost:4000/v1/auth/reset-password",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ email, otp, newPassword }),
-        }
-      );
+  try {
+    await API.post("/api/auth/verify-otp", {
+      email,
+      otp,
+    });
 
-      const data = await response.json();
-      if (response.ok) {
-        toast.success("Password reset successfully!");
-        setTimeout(() => {
-          navigate("/login");
-        }, 2000);
-      } else {
-        toast.error(data.message || "Failed to reset password");
-      }
-    } catch (error) {
-      toast.error(error,"An error occurred. Please try again.");
-    }
-  };
+    toast.success("OTP verified successfully!");
+    setStep(3);
 
-  const handleResendOTP = async () => {
-    try {
-      const response = await fetch(
-        `${PORT}/api/auth/resend-otp`,
-        // "http://localhost:4000/v1/auth/resend-otp",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ email }),
-        }
-      );
+  } catch (error) {
+    toast.error(
+      error.response?.data?.message || "Invalid OTP"
+    );
+    console.error(error);
+  }
+};
 
-      const data = await response.json();
-      if (response.ok) {
-        toast.success("New OTP sent successfully!");
-        setTimer(600); // Reset timer to 5 minutes
-      } else {
-        toast.error(data.message || "Failed to resend OTP");
-      }
-    } catch (error) {
-      toast.error(error,"An error occurred. Please try again.");
-    }
-  };
+const handleResetPassword = async (e) => {
+  e.preventDefault();
+
+  if (newPassword !== confirmPassword) {
+    toast.error("Passwords do not match!");
+    return;
+  }
+
+  try {
+    await API.post("/api/auth/reset-password", {
+      email,
+      otp,
+      newPassword,
+    });
+
+    toast.success("Password reset successfully!");
+
+    setTimeout(() => {
+      navigate("/login");
+    }, 2000);
+
+  } catch (error) {
+    toast.error(
+      error.response?.data?.message ||
+      "Failed to reset password"
+    );
+    console.error(error);
+  }
+};
+
+const handleResendOTP = async () => {
+  try {
+    await API.post("/api/auth/resend-otp", {
+      email,
+    });
+
+    toast.success("New OTP sent successfully!");
+    setTimer(600); // Reset timer to 10 minutes (600 sec)
+
+  } catch (error) {
+    toast.error(
+      error.response?.data?.message ||
+      "Failed to resend OTP"
+    );
+    console.error(error);
+  }
+};
+
+
+
+
+
   return (
   <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#1f1c18] to-[#8e0e00] px-4 py-12">
 

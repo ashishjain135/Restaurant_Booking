@@ -8,6 +8,8 @@ import { io } from "socket.io-client";
 const socket = io(import.meta.env.VITE_API_URL, {
   withCredentials: true,
 });
+import API from "../../utils/axios";
+
 
 
 export default function MyBookings() {
@@ -15,17 +17,37 @@ export default function MyBookings() {
   const [filter, setFilter] = useState("upcoming");
   const [loading, setLoading] = useState(true);
 
-  const fetchBookings = async (userId) => {
-    try {
-      const res = await fetch(`http://localhost:5000/api/bookings/user/${userId}`);
-      const data = await res.json();
-      setBookings(data.bookings);
-    } catch (err) {
-      console.error("Failed to fetch bookings", err);
-    } finally {
-      setLoading(false);
-    }
-  };
+
+  
+// useEffect(() => {
+//   console.log("userId:", localStorage.getItem("userId"));
+//   console.log("token:", localStorage.getItem("token"));
+// }, []);
+
+
+ const fetchBookings = async (userId) => {
+  try {
+    const token = localStorage.getItem("token");
+
+    const res = await API.get(
+      `/api/bookings/user/${userId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    console.log("Bookings response:", res.data);
+
+    setBookings(res.data.bookings || []);
+  } catch (err) {
+    console.error("Failed to fetch bookings", err);
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   useEffect(() => {
   const userId = localStorage.getItem("userId");
@@ -52,14 +74,13 @@ const handleCancel = async (id) => {
   const token = localStorage.getItem("token");
   if (window.confirm("Cancel this booking?")) {
     try {
-      const res = await fetch(`http://localhost:5000/api/bookings/${id}/cancel`, {
-        method: "PATCH",
+      const res = await API.patch(`/api/bookings/${id}/cancel`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`
         },
       });
-      const updated = await res.json();
+      const updated = res.data;
       setBookings((prev) => prev.map((b) => (b._id === id ? updated : b)));
     } catch (err) {
       console.error("Cancel failed", err);

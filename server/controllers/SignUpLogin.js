@@ -12,18 +12,6 @@ const apiKey = client.authentications["api-key"];
 apiKey.apiKey = process.env.BREVO_API_KEY;
 
 const tranEmailApi = new SibApiV3Sdk.TransactionalEmailsApi();
-
-
-
-// Email transporter setup
-// const transporter = nodemailer.createTransport({
-//   service: 'gmail',
-//   auth: {
-//     user: process.env.EMAIL_USER,
-//     pass: process.env.EMAIL_PASS,
-//   },
-// });
-
 // Generate 6-digit verification code
 function generateVerificationCode() {
   return Math.floor(100000 + Math.random() * 900000).toString();
@@ -296,81 +284,5 @@ const verifyEmail = async (req, res) => {
     res.status(500).json({ success: false, message: error.message });
   }
 };
-
-// // Create admin route (protected)
-// const createAdmin = async (req, res) => {
-//   try {
-//     const {
-//       firstName,
-//       middleName,
-//       lastName,
-//       phoneNumber,
-//       address,
-//       age,
-//       gender,
-//       email,
-//       password,
-//       confirmPassword,
-//     } = req.body;
-
-//     // Validate required fields
-//     if (
-//       !email ||
-//       !password ||
-//       !confirmPassword ||
-//       !firstName ||
-//       !lastName ||
-//       !phoneNumber ||
-//       !address ||
-//       !age ||
-//       !gender
-//     ) {
-//       return res.status(400).json({ message: 'Required data missing' });
-//     }
-
-//     // Check password match
-//     if (password !== confirmPassword) {
-//       return res.status(400).json({ message: 'Passwords do not match.' });
-//     }
-
-//     // Check if user exists
-//     const existingUser = await User.findOne({ email });
-//     if (existingUser) {
-//       return res.status(400).json({ message: 'User already exists.' });
-//     }
-
-//     // Hash password
-//     const saltRounds = 10;
-//     const hashedPassword = await bcrypt.hash(password, saltRounds);
-
-//     // Create admin user
-//     const newAdmin = await User.create({
-//       email,
-//       password: hashedPassword,
-//       firstName,
-//       middleName,
-//       lastName,
-//       phoneNumber,
-//       address,
-//       age: Number(age),
-//       gender,
-//       role: 'admin',
-//       isEmailVerified: true, // Auto-verify for admins
-//     });
-
-//     res.status(201).json({
-//       success: true,
-//       message: 'Admin created successfully.',
-//       data: { email: newAdmin.email, role: newAdmin.role },
-//     });
-//   } catch (error) {
-//     console.error(error);
-//     res.status(500).json({
-//       success: false,
-//       message: 'Server error',
-//       error: error.message,
-//     });
-//   }
-// };
 
 module.exports = { signup, login, changePassword, verifyEmail };

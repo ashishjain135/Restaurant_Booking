@@ -2,7 +2,7 @@
  * BookingForm handles table reservation by collecting user inputs, validating availability, and sending data to a protected backend endpoint
  */
 import React, { useState, useEffect } from "react";
-
+import API from "../../utils/axios";
 export default function BookingForm({ user = {} }) {
   const [formData, setFormData] = useState({
     name: user.name || "",
@@ -35,7 +35,7 @@ export default function BookingForm({ user = {} }) {
   }, [formData.date, formData.time, formData.guests]);
 
   const storedUser = JSON.parse(localStorage.getItem("user"));
-const userId = storedUser?.userId;
+  const userId = storedUser?._id || localStorage.getItem("userId"); // fallback to userId if user object is not available
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -56,19 +56,13 @@ const handleSubmit = async (e) => {
   setIsSubmitting(true);
 
   try {
-    const response = await API.post("/api/bookings", {
-      headers: {
-        "Content-Type": "application/json",
-      },
-      data: { ...formData, userId },
+    const response = await API.post(
+      "/api/bookings",
+      { ...formData, userId }  // data second argument me directly
+    );
 
-    });
+    const data = response.data;
 
-    if (!response.ok) {
-      throw new Error("Failed to book table");
-    }
-
-    const data = await response.json();
     setBookingRef(data.reference);
     setConfirmedDetails(data);
     setShowConfirmation(true);
@@ -87,9 +81,13 @@ const handleSubmit = async (e) => {
       allergies: "",
       tableNumber: "",
     });
+
   } catch (error) {
-    alert("Booking failed. Please try again.");
-    console.error(error);
+    console.error("Booking failed:", error);
+    alert(
+      error.response?.data?.message ||
+      "Booking failed. Please try again."
+    );
   } finally {
     setIsSubmitting(false);
   }

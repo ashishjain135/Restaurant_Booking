@@ -81,6 +81,7 @@ router.patch("/:id/cancel", async (req, res) => {
 router.get('/user/:userId', async (req, res) => {
   try {
     const bookings = await Booking.find({ userId: req.params.userId }).sort({ createdAt: -1 });
+    // console.log(`Fetched ${bookings.length} bookings for user ${req.params.userId}`);
     res.status(200).json({ success: true, bookings });
   } catch (err) {
     console.error('Error fetching user bookings:', err);
