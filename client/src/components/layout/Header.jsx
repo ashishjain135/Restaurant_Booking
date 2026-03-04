@@ -67,7 +67,7 @@ export default function Header() {
             ))}
 
             <Link
-              to="/login"
+              to="/"
               onClick={() => setMenuOpen(false)}
               className="mt-2 text-center px-4 py-2 rounded-full bg-yellow-400 text-black font-semibold"
             >

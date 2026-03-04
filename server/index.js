@@ -33,6 +33,7 @@ app.use(cors({
     } else {
       callback(new Error("Not allowed by CORS"));
     }
+    console.log("Origin:", origin);
   },
   credentials: true
 }));
