@@ -67,9 +67,9 @@ const todayRevenue = await Order.aggregate([
     });
 
 // ✅ Debug Logs (add this block right here)
-console.log("📅 Today Orders:", todayOrders.length);
-console.log("📆 Month Orders:", monthOrders.length);
-console.log("📈 Year Orders:", yearOrders.length);
+// console.log("📅 Today Orders:", todayOrders.length);
+// console.log("📆 Month Orders:", monthOrders.length);
+// console.log("📈 Year Orders:", yearOrders.length);
     // Calculate Revenues
     const calcRevenue = orders => orders.reduce((sum, o) => sum + (o.totalAmount || 0), 0);
     const calcCOD = orders => orders.filter(o => o.paymentMethod === 'COD').reduce((sum, o) => sum + (o.totalAmount || 0), 0);

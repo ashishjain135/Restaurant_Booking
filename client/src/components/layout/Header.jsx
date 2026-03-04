@@ -35,7 +35,7 @@ export default function Header() {
 
           {/* Book Table Button */}
           <Link
-            to="/booking"
+            to="/login"
             className="ml-4 px-5 py-2 rounded-full bg-yellow-400 text-black font-semibold hover:bg-white transition"
           >
             Book Table
@@ -67,7 +67,7 @@ export default function Header() {
             ))}
 
             <Link
-              to="/booking"
+              to="/login"
               onClick={() => setMenuOpen(false)}
               className="mt-2 text-center px-4 py-2 rounded-full bg-yellow-400 text-black font-semibold"
             >
