@@ -1,7 +1,7 @@
 // server/models/TableBooking.js
 const mongoose = require("mongoose");
 
-const tableBookingSchema = new mongoose.Schema({
+const tableSchema = new mongoose.Schema({
   tableNumber: {
     type: Number,
     required: true,
@@ -11,6 +11,14 @@ const tableBookingSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
+  types: {
+    type: [String],
+    enum: ["Regular", "family", "private","hall", "outdoor"],
+    default: "Regular",
+  },
+  image: {
+    type: String,
+  },
   status: {
     type: String,
     enum: ["occupied", "reserved", "available"],
@@ -19,4 +27,4 @@ const tableBookingSchema = new mongoose.Schema({
    bookingTime: { type: Date, default: null }
 }, { timestamps: true });
 
-module.exports = mongoose.model("TableBooking", tableBookingSchema);
+module.exports = mongoose.model("Table", tableSchema);

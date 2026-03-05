@@ -17,7 +17,7 @@ router.get('/', getAllMenuItems);          // GET all menu items (with optional 
 router.post('/', createMenuItem); // POST a new dish
 router.delete('/:id', deleteMenuItem); // DELETE a dish by ID
 router.put('/:id', updateMenuItem); // UPDATE a dish by ID
-router.get('/dashboard-stats', getDashboardStats); // GET dashboard const [first, setfirst] = useState(second)
+router.get('/stats/dashboard', getDashboardStats);
 
 module.exports = router;
 

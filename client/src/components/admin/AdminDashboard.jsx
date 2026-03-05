@@ -3,6 +3,7 @@ import axios from "axios";
 import { ChevronDown } from "lucide-react";
 import DashboardCard from "./DashboardCard";
 import API from "../../utils/axios";
+
 const AdminDashboard = ({ setActiveSection }) => {
   const [open, setOpen] = useState({
     orders: true,
@@ -31,6 +32,7 @@ const AdminDashboard = ({ setActiveSection }) => {
     try{
       const res = await API.get(
       "/api/menu/stats/dashboard");
+      console.log("MENU STATS:", res.data);
     setMenuStats(res.data);
     } catch (err) {
     console.error("Error fetching menu stats:", err);

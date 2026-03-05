@@ -1,9 +1,14 @@
+
 /**
- * BookingForm handles table reservation by collecting user inputs, validating availability, and sending data to a protected backend endpoint
+ * BookingForm handles table reservation by collecting user inputs
+ * and sending data to backend
  */
-import React, { useState, useEffect } from "react";
+
+import React, { useState } from "react";
 import API from "../../utils/axios";
-export default function BookingForm({ user = {} }) {
+
+export default function BookingForm({ user = {}, tableNumber = "" }) {
+
   const [formData, setFormData] = useState({
     name: user.name || "",
     email: user.email || "",
@@ -15,256 +20,358 @@ export default function BookingForm({ user = {} }) {
     specialRequests: "",
     addons: [],
     allergies: "",
-    tableNumber: ""
-  
+    tableNumber: tableNumber
   });
 
-  const [available, setAvailable] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [bookingRef, setBookingRef] = useState(null);
   const [confirmedDetails, setConfirmedDetails] = useState(null);
 
-  useEffect(() => {
-    if (formData.date && formData.time && formData.guests) {
-      const timer = setTimeout(() => {
-        setAvailable(Math.random() > 0.3);
-      }, 500);
-      return () => clearTimeout(timer);
-    }
-  }, [formData.date, formData.time, formData.guests]);
-
   const storedUser = JSON.parse(localStorage.getItem("user"));
-  const userId = storedUser?._id || localStorage.getItem("userId"); // fallback to userId if user object is not available
+  const userId = storedUser?._id || localStorage.getItem("userId");
+
+  // ================= HANDLE INPUT CHANGE =================
 
   const handleChange = (e) => {
+
     const { name, value, type, checked } = e.target;
+
     if (type === "checkbox") {
+
       setFormData((prev) => ({
         ...prev,
         addons: checked
           ? [...prev.addons, value]
           : prev.addons.filter((a) => a !== value)
       }));
+
     } else {
-      setFormData((prev) => ({ ...prev, [name]: value }));
+
+      setFormData((prev) => ({
+        ...prev,
+        [name]: value
+      }));
+
     }
   };
 
-const handleSubmit = async (e) => {
-  e.preventDefault();
-  setIsSubmitting(true);
 
-  try {
-    const response = await API.post(
-      "/api/bookings",
-      { ...formData, userId }  // data second argument me directly
-    );
+  // ================= HANDLE BOOKING =================
 
-    const data = response.data;
+  const handleSubmit = async (e) => {
 
-    setBookingRef(data.reference);
-    setConfirmedDetails(data);
-    setShowConfirmation(true);
+    e.preventDefault();
 
-    // Reset form
-    setFormData({
-      name: user.name || "",
-      email: user.email || "",
-      phone: user.phone || "",
-      date: "",
-      time: "",
-      guests: 2,
-      tableType: "indoor",
-      specialRequests: "",
-      addons: [],
-      allergies: "",
-      tableNumber: "",
-    });
+    setIsSubmitting(true);
+    // console.log("Submitting booking with data:", ...formData, userId);
+    try {
 
-  } catch (error) {
-    console.error("Booking failed:", error);
-    alert(
-      error.response?.data?.message ||
-      "Booking failed. Please try again."
-    );
-  } finally {
-    setIsSubmitting(false);
-  }
-};
+      const response = await API.post("/api/bookings", {
+        ...formData,
+        userId
+      });
 
+      const data = response.data;
+
+      setBookingRef(data.reference);
+      setConfirmedDetails(data);
+      setShowConfirmation(true);
+
+      // reset form
+
+      setFormData({
+        name: user.name || "",
+        email: user.email || "",
+        phone: user.phone || "",
+        date: "",
+        time: "",
+        guests: 2,
+        tableType: "indoor",
+        specialRequests: "",
+        addons: [],
+        allergies: "",
+        tableNumber: tableNumber
+      });
+
+    } catch (error) {
+
+      console.error("Booking failed:", error);
+
+      alert(
+        error.response?.data?.message ||
+        "Booking failed. Please try again."
+      );
+
+    } finally {
+
+      setIsSubmitting(false);
+
+    }
+  };
+
+
+  // ================= CANCEL CONFIRMATION =================
 
   const handleCancel = () => {
+
     setConfirmedDetails(null);
     setShowConfirmation(false);
     setBookingRef(null);
+
   };
 
+
   return (
-    <div className="max-w-3xl mx-auto bg-white p-6 rounded shadow-md">
+
+    <div className="max-w-3xl mx-auto bg-white p-6 rounded-xl shadow-md">
+
+      <h2 className="text-2xl font-bold mb-4">
+        Reserve a Table
+      </h2>
+
       <form onSubmit={handleSubmit}>
+
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+
           <input
             type="text"
             name="name"
             value={formData.name}
             onChange={handleChange}
             placeholder="Name"
-            className="input"
+            className="border p-2 rounded"
             required
-            
           />
+
           <input
             type="email"
             name="email"
             value={formData.email}
             onChange={handleChange}
             placeholder="Email"
-            className="input"
+            className="border p-2 rounded"
             required
-            
           />
+
           <input
             type="tel"
             name="phone"
             value={formData.phone}
             onChange={handleChange}
             placeholder="Phone"
-            className="input"
+            className="border p-2 rounded"
             required
-            
           />
+
           <input
             type="date"
             name="date"
             value={formData.date}
             onChange={handleChange}
-            className="input"
             min={new Date().toISOString().split("T")[0]}
+            className="border p-2 rounded"
             required
           />
+
           <input
             type="time"
             name="time"
             value={formData.time}
             onChange={handleChange}
-            className="input"
+            className="border p-2 rounded"
             required
           />
+
           <select
             name="guests"
             value={formData.guests}
             onChange={handleChange}
-            className="input"
+            className="border p-2 rounded"
           >
+
             {Array.from({ length: 20 }, (_, i) => (
-              <option key={i + 1} value={i + 1}>{i + 1} Guests</option>
+              <option key={i} value={i + 1}>
+                {i + 1} Guests
+              </option>
             ))}
+
           </select>
+
           <select
             name="tableType"
             value={formData.tableType}
             onChange={handleChange}
-            className="input"
+            className="border p-2 rounded"
           >
-            <option value="indoor">Indoor</option>
-            <option value="outdoor">Outdoor</option>
-            <option value="window">Window Corner</option>
+
+            <option value="Regular">Regular</option>
+            <option value="Family">Family</option>
+            <option value="Private">Private</option>
+
           </select>
+
           <input
             type="text"
             name="tableNumber"
             value={formData.tableNumber}
-            onChange={handleChange}
-            placeholder="Preferred Table Number (optional)"
-            className="input"
+            readOnly
+            className="border p-2 rounded"
           />
+
         </div>
+
+
+        {/* Special Requests */}
 
         <textarea
           name="specialRequests"
           value={formData.specialRequests}
           onChange={handleChange}
           placeholder="Special Requests"
-          className="input mt-4 w-full"
+          className="border p-2 rounded mt-4 w-full"
           rows="3"
-        ></textarea>
+        />
+
+
+        {/* Allergies */}
 
         <textarea
           name="allergies"
           value={formData.allergies}
           onChange={handleChange}
-          placeholder="Food Allergies or Pre-orders (optional)"
-          className="input mt-2 w-full"
+          placeholder="Food Allergies or Pre-orders"
+          className="border p-2 rounded mt-2 w-full"
           rows="2"
-        ></textarea>
+        />
+
+
+        {/* Addons */}
 
         <div className="mt-4">
-          <label className="font-medium">Add-ons:</label>
+
+          <label className="font-medium">
+            Add-ons:
+          </label>
+
           <div className="flex gap-4 mt-2">
+
             <label>
+
               <input
                 type="checkbox"
                 value="birthday"
                 checked={formData.addons.includes("birthday")}
                 onChange={handleChange}
-              /> Birthday Setup
+              />
+
+              {" "}Birthday Setup
+
             </label>
+
             <label>
+
               <input
                 type="checkbox"
                 value="anniversary"
                 checked={formData.addons.includes("anniversary")}
                 onChange={handleChange}
-              /> Anniversary Decor
+              />
+
+              {" "}Anniversary Decor
+
             </label>
+
           </div>
+
         </div>
 
-        {!available && (
-          <p className="text-red-500 mt-2">
-            Table not available. Try a different time.
-          </p>
-        )}
+
+        {/* Submit */}
 
         <div className="flex gap-4 mt-6">
+
           <button
             type="submit"
-            disabled={!available || isSubmitting}
-            className="!bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 disabled:opacity-50"
+            disabled={isSubmitting}
+            className="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700"
           >
+
             {isSubmitting ? "Booking..." : "Confirm Booking"}
+
           </button>
-          
+
         </div>
+
       </form>
 
+
+      {/* Confirmation */}
+
       {showConfirmation && confirmedDetails && (
+
         <div className="mt-6 bg-green-100 p-4 rounded">
+
           <h3 className="text-green-800 font-semibold mb-2">
             🎉 Booking Confirmed!
           </h3>
-          <p>Reference: <strong>{bookingRef}</strong></p>
-          <p>Date: {confirmedDetails.date}</p>
-          <p>Time: {confirmedDetails.time}</p>
-          <p>Guests: {confirmedDetails.guests}</p>
-          <p>Table Type: {confirmedDetails.tableType}</p>
-          {confirmedDetails.tableNumber && <p>Table No: {confirmedDetails.tableNumber}</p>}
-          {confirmedDetails.addons.length > 0 && (
-            <p>Add-ons: {confirmedDetails.addons.join(", ")}</p>
+
+          <p>
+            Reference: <strong>{bookingRef}</strong>
+          </p>
+
+          <p>
+            Date: {new Date(confirmedDetails.date).toLocaleDateString()}
+          </p>
+
+          <p>
+            Time: {confirmedDetails.time}
+          </p>
+
+          <p>
+            Guests: {confirmedDetails.guests}
+          </p>
+
+          <p>
+            Table Type: {confirmedDetails.tableType}
+          </p>
+
+          {confirmedDetails.tableNumber && (
+
+            <p>
+              Table No: {confirmedDetails.tableNumber}
+            </p>
+
           )}
+
+          {confirmedDetails.addons?.length > 0 && (
+
+            <p>
+              Add-ons: {confirmedDetails.addons.join(", ")}
+            </p>
+
+          )}
+
           {confirmedDetails.specialRequests && (
-            <p>Note: {confirmedDetails.specialRequests}</p>
+
+            <p>
+              Note: {confirmedDetails.specialRequests}
+            </p>
+
           )}
+
           <button
             type="button"
             onClick={handleCancel}
-            className="!bg-red-500 text-white px-6 py-2 rounded hover:bg-red-600"
+            className="bg-red-500 text-white px-6 py-2 rounded mt-4"
           >
-            Cancel
+            Close
           </button>
+
         </div>
+
       )}
+
     </div>
   );
 }

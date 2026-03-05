@@ -11,27 +11,24 @@ const socket = io(import.meta.env.VITE_API_URL, {
 });
 
 const TableBooking = () => {
+  const [tables, setTables] = useState([]);
+  const [bookings, setBookings] = useState([]);
+  
+  
   const [showAddModal, setShowAddModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
+  
   const [editingTable, setEditingTable] = useState(null);
-  const [tables, setTables] = useState([]);
   const [newTable, setNewTable] = useState({
     tableNumber: "",
     capacity: "",
     status: "available",
+    type:"regular",
     bookingTime: "",
   });
 
-  const [bookings, setBookings] = useState([]);
 
-  const fetchBookings = async () => {
-    try {
-      const res = await API.get("/api/bookings");
-      setBookings(res.data);
-    } catch (err) {
-      console.error("Failed to fetch bookings", err);
-    }
-  };
+  // ================== Fetch Tables & Bookings ==================
 
   const fetchTables = async () => {
     try {
@@ -42,15 +39,18 @@ const TableBooking = () => {
     }
   };
 
-  useEffect(() => {
-    socket.on("connect", () => {
-      console.log("✅ Socket connected:", socket.id);
-    });
 
-    socket.on("disconnect", () => {
-      console.log("❌ Socket disconnected");
-    });
+  const fetchBookings = async () => {
+    try {
+      const res = await API.get("/api/bookings");
+      setBookings(res.data);
+    } catch (err) {
+      console.error("Failed to fetch bookings", err);
+    }
+  };
 
+//=== socket 
+useEffect(() => {
     fetchTables();
     fetchBookings();
 
@@ -59,12 +59,85 @@ const TableBooking = () => {
       fetchBookings();
     });
 
+
+    // socket.on("connect", () => {
+    //   console.log("✅ Socket connected:", socket.id);
+    // });
+
+    // socket.on("disconnect", () => {
+    //   console.log("❌ Socket disconnected");
+    // });
+
+
+
     return () => {
-      socket.off("connect");
-      socket.off("disconnect");
+      // socket.off("connect");
+      // socket.off("disconnect");
       socket.off("tableBooked");
     };
   }, []);
+
+
+// === add tables
+
+const handleSubmitAddTable = async (e) => {
+  e.preventDefault();
+  const formData = new FormData();
+  formData.append("tableNumber", newTable.tableNumber);
+  formData.append("capacity", newTable.capacity);
+  formData.append("status", newTable.status);
+  formData.append("type", newTable.types);
+  formData.append("image", newTable.image);
+  
+  try {
+    const res = await API.post("/api/tables", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data"
+      }
+    });
+    fetchTables();
+    setTables([...tables, res.data]);
+    setShowAddModal(false);
+
+    setNewTable({ tableNumber: "", 
+      capacity: "", 
+      types: "regular", 
+      status: "available",
+      image: null
+    });
+  } catch (err) {
+    console.error("Add table error:", err);
+  }
+};
+
+
+const handleEdit = (table) => {
+  setEditingTable({ ...table });
+  setShowEditModal(true);
+};
+
+const handleSubmitEditTable = async (e) => {
+    
+    e.preventDefault();
+
+    try {
+
+      await API.patch(`/api/tables/by-number/${editingTable.tableNumber}`, {
+        capacity: editingTable.capacity,
+        types: editingTable.types,
+        status: editingTable.status
+      });
+
+      fetchTables();
+
+      setShowEditModal(false);
+      setEditingTable(null);
+
+    } catch (err) {
+      console.error("Edit table error:", err);
+    }
+  };
+
 
   const handleDelete = async (tableNumber) => {
     try {
@@ -75,40 +148,8 @@ const TableBooking = () => {
     }
   };
 
-  const handleEdit = (table) => {
-    setEditingTable({ ...table });
-    setShowEditModal(true);
-  };
 
-  const handleSubmitAddTable = async (e) => {
-    e.preventDefault();
-    try {
-      const res = await API.post("/api/tables", newTable);
-      setTables([...tables, res.data]);
-      setShowAddModal(false);
-      setNewTable({ tableNumber: "", capacity: "", status: "available", bookingTime: "" });
-    } catch (err) {
-      console.error("Add table error:", err);
-    }
-  };
 
-  const handleSubmitEditTable = async (e) => {
-    e.preventDefault();
-    try {
-      const { tableNumber, capacity, status, bookingTime } = editingTable;
-      const dataToSend = { tableNumber, capacity, status };
-      if (status !== "available" && bookingTime) {
-        dataToSend.bookingTime = bookingTime;
-      }
-
-      await API.patch(`/api/tables/by-number/${tableNumber}`, dataToSend);
-      fetchTables();
-      setShowEditModal(false);
-      setEditingTable(null);
-    } catch (err) {
-      console.error("Edit table error:", err);
-    }
-  };
   return (
   <div className="space-y-10">
 
@@ -269,7 +310,29 @@ const TableBooking = () => {
               className="w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-yellow-400 outline-none"
               required
             />
+            <input
+              type="file"
+              accept="image/*"
+              onChange={(e) =>
+                setNewTable({ ...newTable, image: e.target.files[0] })
+              }
+              className="w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-yellow-400 outline-none"
+            />
+            <select
+              value={newTable.types}
+              onChange={(e) =>
+                setNewTable({ ...newTable, status: e.target.value })
+              }
+              className="w-full px-4 py-3 border rounded-xl"
+            >
+              <option value="Regular">Regular</option>
+              <option value="family">Family</option>
+              <option value="private">Private</option>
+              <option value="outdoor">Outdoor</option>
+              <option value="hall">Hall</option>
 
+            </select>
+            
             <select
               value={newTable.status}
               onChange={(e) =>

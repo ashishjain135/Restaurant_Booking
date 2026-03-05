@@ -19,7 +19,7 @@ import BookingForm from "./components/user/BookingForm";
 import Menu from "./pages/user/Menu";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
-
+import TableLayout from "./pages/user/TableLayout";
 const token = localStorage.getItem("token");
 // console.log(token);
 
@@ -43,6 +43,7 @@ function App() {
         <Route path="/profile" element={<UserProfile />} />
         <Route path="/admin-panel" element={<AdminPanel />} />
         <Route path="/booking" element={<BookingForm />} />
+        <Route path="/book-table" element={<TableLayout />} />
         <Route path="/User/*" element={<UserPanel />} />
       </Routes>
       <Footer />
