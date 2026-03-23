@@ -24,9 +24,17 @@ const LoginForm = () => {
 
       if (response.data.token) {
         localStorage.setItem("userId", response.data.userId);
+        localStorage.setItem("user", JSON.stringify({
+        _id: response.data.userId,
+         role: response.data.role
+        }));
+
+
         localStorage.setItem("token", response.data.token);
         localStorage.setItem("role", response.data.role);
 
+        
+        console.log(response.data);
         toast.success("Login successful");
 
         //here we are checking the role and navigating accordingly authenticated user

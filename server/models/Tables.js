@@ -11,7 +11,7 @@ const tableSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
-  types: {
+  type: {
     type: [String],
     enum: ["Regular", "family", "private","hall", "outdoor"],
     default: "Regular",
@@ -19,12 +19,11 @@ const tableSchema = new mongoose.Schema({
   image: {
     type: String,
   },
-  status: {
-    type: String,
-    enum: ["occupied", "reserved", "available"],
-    default: "available",
+  status:{
+    type:String,
+    enum:["available", "reserved", "occupied"],
+    default:"available",
   },
-   bookingTime: { type: Date, default: null }
 }, { timestamps: true });
 
 module.exports = mongoose.model("Table", tableSchema);

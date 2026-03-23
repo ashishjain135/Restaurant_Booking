@@ -14,15 +14,21 @@ exports.getTables = async (req, res) => {
 // 🔵 Add new table
 exports.createTable = async (req, res) => {
   try {
+    console.log("BODY:", req.body);
+    console.log("FILE:", req.file);
 
-    const { tableNumber, capacity, type, status } = req.body;
+    // 🔥 IMPORTANT: values manually extract karo
+    const tableNumber = Number(req.body.tableNumber);
+    const capacity = Number(req.body.capacity);
+    const type = req.body.type;
+    const status = req.body.status || "available";
 
     const newTable = new Table({
       tableNumber,
       capacity,
       type,
       status,
-      image: req.file ? req.file.path : null // Save the image path if uploaded
+      image: req.file ? req.file.path : ""
     });
 
     const savedTable = await newTable.save();
@@ -30,6 +36,7 @@ exports.createTable = async (req, res) => {
     res.status(201).json(savedTable);
 
   } catch (error) {
+    console.error("CREATE TABLE ERROR:", error);
     res.status(400).json({ message: error.message });
   }
 };

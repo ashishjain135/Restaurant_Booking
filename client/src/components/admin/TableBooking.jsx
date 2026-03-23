@@ -23,7 +23,7 @@ const TableBooking = () => {
     tableNumber: "",
     capacity: "",
     status: "available",
-    type:"regular",
+    type:"Regular",
     bookingTime: "",
   });
 
@@ -83,12 +83,17 @@ useEffect(() => {
 const handleSubmitAddTable = async (e) => {
   e.preventDefault();
   const formData = new FormData();
-  formData.append("tableNumber", newTable.tableNumber);
-  formData.append("capacity", newTable.capacity);
+  formData.append("tableNumber", Number(newTable.tableNumber));
+  formData.append("capacity", Number(newTable.capacity));
   formData.append("status", newTable.status);
-  formData.append("type", newTable.types);
-  formData.append("image", newTable.image);
+  formData.append("type", newTable.type);
+
+  if(newTable.image){
+      formData.append("image", newTable.image);
+  }
   
+  
+  console.log("Sending:", Object.fromEntries(formData));
   try {
     const res = await API.post("/api/tables", formData, {
       headers: {
@@ -101,7 +106,7 @@ const handleSubmitAddTable = async (e) => {
 
     setNewTable({ tableNumber: "", 
       capacity: "", 
-      types: "regular", 
+      type: "Regular", 
       status: "available",
       image: null
     });
@@ -124,7 +129,7 @@ const handleSubmitEditTable = async (e) => {
 
       await API.patch(`/api/tables/by-number/${editingTable.tableNumber}`, {
         capacity: editingTable.capacity,
-        types: editingTable.types,
+        type: editingTable.type,
         status: editingTable.status
       });
 
@@ -255,7 +260,7 @@ const handleSubmitEditTable = async (e) => {
                       : "bg-red-100 text-red-700"
                   }`}
               >
-                {table.status.toUpperCase()}
+                {table.status?.toUpperCase() ||"UNKNOWN"}
               </span>
             </div>
 
@@ -319,9 +324,9 @@ const handleSubmitEditTable = async (e) => {
               className="w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-yellow-400 outline-none"
             />
             <select
-              value={newTable.types}
+              value={newTable.type}
               onChange={(e) =>
-                setNewTable({ ...newTable, status: e.target.value })
+                setNewTable({ ...newTable, type: e.target.value })
               }
               className="w-full px-4 py-3 border rounded-xl"
             >
