@@ -15,11 +15,11 @@ import Header from "./components/layout/Header";
 import UserProfile from "./components/user/UserProfile";
 import AdminPanel from "./pages/admin/AdminPanel";
 import UserPanel from "./pages/user/UserPanel";
-import BookingForm from "./components/user/BookingForm";
 import Menu from "./pages/user/Menu";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
 import TableLayout from "./pages/user/TableLayout";
+import BookingHistory from "../src/components/user/BookingHistory";
 const token = localStorage.getItem("token");
 // console.log(token);
 
@@ -42,9 +42,9 @@ function App() {
         <Route path="/verify-email" element={<VerifyEmailPage />} />
         <Route path="/profile" element={<UserProfile />} />
         <Route path="/admin-panel" element={<AdminPanel />} />
-        <Route path="/booking" element={<BookingForm />} />
         <Route path="/book-table" element={<TableLayout />} />
         <Route path="/User/*" element={<UserPanel />} />
+        <Route path="/history" element={<BookingHistory />} />
       </Routes>
       <Footer />
     </BrowserRouter>

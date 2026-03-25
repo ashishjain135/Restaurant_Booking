@@ -1,13 +1,10 @@
 import { useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
 import UserSidebar from "../../components/user/UserSidebar";
 import Dashboard from "../../components/user/Dashboard";
-import BookingForm from "../../components/user/BookingForm";
-import BookingHistory from "../../components/user/BookingHistory";
-import UserProfile from "../../components/user/UserProfile";
-
 const UserPanel = () => {
   const [active, setActive] = useState("dashboard");
-
+  const navigate = useNavigate();
   const renderContent = () => {
     switch (active) {
       case "dashboard":
@@ -19,11 +16,14 @@ const UserPanel = () => {
           />
         );
       case "book":
-        return <BookingForm />;
+        navigate("/book-table");
+        break;
       case "history":
-        return <BookingHistory />;
+        navigate("/history");
+        break;
       case "profile":
-        return <UserProfile />;
+        navigate("/profile");
+        break;
       default:
         return null;
     }

@@ -203,7 +203,7 @@ const handleSubmitEditTable = async (e) => {
                 <td className="px-6 py-4">
                   {new Date(booking.date).toLocaleDateString()}
                 </td>
-                <td className="px-6 py-4">{booking.time}</td>
+                <td className="px-6 py-4">{booking.timeSlot}</td>
                 <td className="px-6 py-4">
                   <span
                     className={`px-3 py-1 rounded-full text-xs font-semibold
