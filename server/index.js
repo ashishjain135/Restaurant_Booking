@@ -11,7 +11,7 @@ const ordersRoute = require('./routes/orders');
 const revenueRoutes = require('./routes/revenue');
 const bookingRoute = require("./routes/bookings");
 const profileRoutes = require('./routes/profileRoutes');
-
+const invoiceRoutes = require('./routes/invoiceRoutes');
 
 const userRoutes = require('./routes/userRoutes');
 
@@ -51,7 +51,7 @@ app.use('/api/menu', menuRoutes);
 app.use("/api/bookings", bookingRoute);
 app.use('/api/profile', profileRoutes);
 app.use('/api/user', userRoutes);
-
+app.use('/api/invoice', invoiceRoutes);
 
 // app.use("/api/category", categoryRoutes);
 // Routes

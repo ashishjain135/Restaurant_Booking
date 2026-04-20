@@ -47,11 +47,26 @@ const OrdersSection = () => {
     fetchOrders();
   };
 
-  const printInvoice = (order) => {
-    const invoice = window.open('', '_blank');
-    invoice.document.write(`<pre>${JSON.stringify(order, null, 2)}</pre>`);
-    invoice.print();
-  };
+  const printInvoice = async (id) => {
+  try {
+    const res = await API.get(`/api/invoice/${id}`, {
+      responseType: "blob", // IMPORTANT 🔥
+    });
+
+    // PDF ko blob me convert
+    const file = new Blob([res.data], { type: "application/pdf" });
+
+    // URL create
+    const fileURL = window.URL.createObjectURL(file);
+
+    // New tab me open
+    window.open(fileURL);
+
+  } catch (error) {
+    console.error("Error fetching invoice:", error);
+  }
+};
+  
 
   const filterOrders = (order) => {
     const today = new Date().toLocaleDateString();
@@ -171,7 +186,7 @@ const OrdersSection = () => {
                     Cancel
                   </button>
                   <button
-                    onClick={() => printInvoice(order)}
+                    onClick={() => printInvoice(order._id)}
                     className="bg-yellow-500 text-black px-3 py-1 rounded hover:bg-yellow-600">
                     Print
                   </button>
