@@ -41,13 +41,13 @@ exports.generateInvoice = async (req, res) => {
     // 🔥 HEADER
     doc.font(boldFont)
       .fontSize(20)
-      .text('Jain Restaurant', { align: 'center' });
+      .text('MealAdda Restaurant', { align: 'center' });
 
     doc.moveDown(0.3);
 
     doc.font(regularFont)
       .fontSize(10)
-      .text('Chanderi, MP | Ph: 9876543210', { align: 'center' });
+      .text('Sagar, MP | Ph: 9876543210', { align: 'center' });
 
     doc.text('GSTIN: 22AAAAA0000A1Z5', { align: 'center' });
 
@@ -60,7 +60,7 @@ exports.generateInvoice = async (req, res) => {
     // 👤 CUSTOMER INFO
     doc.fontSize(12).text(`Customer: ${order.customerName || "Guest"}`);
     doc.text(`Mobile: ${order.mobile || "N/A"}`);
-    doc.text(`Order ID: ${order._id}`);
+    // doc.text(`Order ID: ${order._id}`);
     doc.text(`Date: ${new Date().toLocaleString()}`);
 
     doc.moveDown();
