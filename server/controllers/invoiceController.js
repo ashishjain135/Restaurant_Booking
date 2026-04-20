@@ -58,8 +58,8 @@ exports.generateInvoice = async (req, res) => {
     doc.moveDown();
 
     // 👤 CUSTOMER INFO
-    doc.fontSize(12).text(`Customer: ${order.customerName || "Guest"}`);
-    doc.text(`Mobile: ${order.mobile || "N/A"}`);
+    doc.fontSize(12).text(`Customer: ${order.userId || "Guest"}`);
+    doc.text(`Mobile: ${order.phone || "N/A"}`);
     // doc.text(`Order ID: ${order._id}`);
     doc.text(`Date: ${new Date().toLocaleString()}`);
 
