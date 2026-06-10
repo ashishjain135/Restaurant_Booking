@@ -139,3 +139,52 @@ exports.getAllBookings = async (req, res) => {
     res.status(500).json({ message: "Failed to fetch bookings" });
   }
 };
+
+
+//6. get all bookings for dashboard
+exports.getDashboardData = async (req, res) => {
+  try {
+    const bookings = await Booking.find({
+      userId: req.params.userId,
+    })
+      .populate("tableId")
+      .sort({ date: -1 });
+
+    const now = new Date();
+
+    const upcomingBooking = bookings.find(
+      booking =>
+        booking.date >= now &&
+        booking.status !== "cancelled"
+    );
+
+    res.json({
+      success: true,
+      data: {
+        totalBookings: bookings.length,
+
+        upcomingBooking: upcomingBooking
+          ? {
+              date: upcomingBooking.date.toLocaleDateString(),
+              timeSlot: upcomingBooking.timeSlot,
+            }
+          : null,
+
+        recentBookings: bookings.slice(0, 5),
+
+        lastVisit:
+          bookings.length > 0
+            ? bookings[0].date.toLocaleDateString()
+            : null,
+
+        profileStatus: "Complete",
+      },
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({
+      success: false,
+      message: "Failed to fetch dashboard",
+    });
+  }
+};

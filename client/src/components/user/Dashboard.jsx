@@ -2,6 +2,7 @@
  * fetch user recent booking history
  * other features last visit etc...
  */
+
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -28,7 +29,7 @@ export default function Dashboard({
         });
 
         console.log("Fetched dashboard data:", response.data); // 👈 debug
-        setDashboardData(response.data);
+        setDashboardData(response.data.data);
         setLoading(false);
       } catch (err) {
         console.error("Failed to fetch dashboard data:", err);
@@ -36,11 +37,12 @@ export default function Dashboard({
       }
     };
 
+    
     fetchDashboardData();
   }, []);
 
   const stats = dashboardData;
-
+  console.log("Dashboard Data State:", dashboardData);
 return (
   <div className="bg-white rounded-2xl shadow-2xl p-8 space-y-10">
 
@@ -66,7 +68,7 @@ return (
           {loading
             ? "Loading..."
             : dashboardData?.upcomingBooking
-            ? `${dashboardData.upcomingBooking.date} • ${dashboardData.upcomingBooking.time}`
+            ? `${dashboardData.upcomingBooking.date} • ${dashboardData.upcomingBooking.timeSlot}`
             : "No upcoming booking"}
         </p>
       </div>

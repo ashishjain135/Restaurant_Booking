@@ -7,7 +7,8 @@ const {
   createBooking,
   getUserBookings,
   getAllBookings,
-  cancelBooking
+  cancelBooking,
+  getDashboardData
 } = require("../controllers/bookingController");
 
 
@@ -16,8 +17,8 @@ router.get("/available", getAvailableTables);
 
 // ✅ Create a new booking and update table status
 router.post("/book", createBooking);
-// GET all bookings
-
+// GET all bookings for dashboard
+router.get("/dashboard/:userId", getDashboardData);
 // ✅ Get all bookings for a user
 router.get('/user/:userId', getUserBookings);
 
